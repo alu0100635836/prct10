@@ -1,4 +1,4 @@
-class Vector_disperso
+class Vectordisperso
 	attr_reader :vector
 
 	def initialize(h = {})
@@ -35,17 +35,17 @@ class Vector_disperso
   	end
 end
 
-class Matriz_dispersa < Matriz
+class Matrizdispersa < Matriz
 	
 	attr_reader :matrix
 
 	def initialize(h = {})
    	@matrix = Hash.new(0)
     	for k in h.keys do 
-      	@matrix[k] = 	if h[k].is_a? Vector_disperso
+      	@matrix[k] = 	if h[k].is_a? Vectordisperso
          						h[k]
             				else 
-                     		@matrix[k] = Vector_disperso.new(h[k])
+                     		@matrix[k] = Vectordisperso.new(h[k])
                    	end
     	end
   	end
@@ -67,7 +67,7 @@ class Matriz_dispersa < Matriz
     	for r in @matrix.keys do
       	c[r] = @matrix[r].vector[j] if @matrix[r].vector.keys.include? j
     	end
-    	Vector_disperso.new c
+    	Vectordisperso.new c
   	end
 
 #SUMA
@@ -100,6 +100,6 @@ class Matriz_dispersa < Matriz
         ms[k] = h.clone unless h.empty?
         h.clear
       end
-      ms2 = Matriz_dispersa.new(ms)
+      ms2 = Matrizdispersa.new(ms)
    end
 end

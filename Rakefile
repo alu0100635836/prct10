@@ -1,8 +1,13 @@
 require "bundler/gem_tasks"
 
-task :default => :bin
+task :default => :rspec
 
 desc "Ejecuta Rspec"
-task :bin do
+task :rspec do
    sh "rspec -Ilib spec/matrixfamily_spec.rb"
+end
+
+desc "Ejecuta las espectativas"
+task :test do
+   sh "ruby test/tc_matrixfamily.rb"
 end

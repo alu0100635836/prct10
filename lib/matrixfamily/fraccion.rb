@@ -1,18 +1,17 @@
 
-include Comparable #librería comparable para desarrollar la práctica7
+include Comparable #librería comparable para desarrollar la práctica
 
 class Fraccion
-  attr_reader :n,:d
+  attr_accessor :n,:d
   
   def initialize(n,d)
     @n, @d = n, d
   end
   
   #metodo reducir
-  def reducir
-    mcd = gcd(@n,@d)
-    @n = (@n/mcd)
-    @d = (@d/mcd)
+  def reducir(frac)
+    mcd = gcd(frac.n,frac.d)
+    fraccion = Fraccion.new((frac.n/mcd),frac.d/mcd)
   end
   
   #metodo num
@@ -30,14 +29,22 @@ class Fraccion
     "#{@n}/#{@d}"
   end
   
+  def gcd(u, v)
+    u, v = u.abs, v.abs
+    while v != 0
+      u, v = v, u % v
+    end
+    u
+  end
+  
   #metodo flotante
   def flotante
-    @n/@d
+    @n.to_f/@d.to_f #conversion de tipo a flotante mediante to_f
   end
   
   #metodo == --> para comparar 2 fracciones
-  def ==(fraccion2)
-    if @n==fraccion2.n && @d==fraccion2.d then
+  def ==(other)
+    if @n==other.n && @d==other.d then
       true
     else
       false
@@ -64,42 +71,29 @@ class Fraccion
   end
   
   #metodo multiplicacion de dos fracciones
-  def *(fraccion2)
-    @n = @n * fraccion2.n
-    @d = @d * fraccion2.d
-    reducir
+  def *(other)
+      @fraccion = Fraccion.new((@n*other.n),@d*other.d)
+      reducir(@fraccion)
   end
   
     #metodo de division de dos fracciones
-  def /(fraccion2)
-    @n = @n * fraccion2.d
-    @d = @d * fraccion2.n
-    reducir
-  end
-  
-    #metodo para ver si nuestra fraccion es menor que fraccion2
-  def menor(fraccion2)
-      mcm = (@d * fraccion2.d)/gcd(@d, fraccion2.d)
-      a = (mcm/@d*@n)
-      b = (mcm/fraccion2.d*fraccion2.n)
-      return @n < fraccion2.n
-      false
+  def /(other)
+      @fraccion = Fraccion.new((@n*other.d),@d*other.n)
+      reducir(@fraccion)
   end
   
     #metodo de suma de dos fracciones
-  def +(fraccion2)
-    mcm = (@d * fraccion2.d)/gcd(@d, fraccion2.d)
-    @n = ((mcm/@d) * @n) + ((mcm/fraccion2.d) * fraccion2.n)
-    @d = mcm
-    reducir
+  def +(other)
+      mcm = (@d * other.d)/gcd(@d, other.d)
+      @fraccion = Fraccion.new(((mcm/@d*@n) + (mcm/other.d*other.n)),mcm)
+      reducir(@fraccion)
   end
 
     #metodo de resta de dos fracciones
-  def -@(fraccion2)
-    mcm = (@d * fraccion2.d)/gcd(@d, fraccion2.d)
-    @n = ((mcm/@d) * @n) - ((mcm/fraccion2.d) * fraccion2.n)
-    @d = mcm
-    reducir
+  def -(other)
+      mcm = (@d * other.d)/gcd(@d, other.d)
+      @fraccion = Fraccion.new(((mcm/@d*@n) - (mcm/other.d*other.n)),mcm)
+      reducir(@fraccion)
   end
     
     #método necesario con la librería Comparable
@@ -117,7 +111,11 @@ class Fraccion
       end
    end
 
-
+    #definicion del metodo coerce para racional
+  def coerce(other)
+      if Integer === other
+	  [Fraccion.new(other,1), self]
+      end
+  end   
+   
 end
-
- 
